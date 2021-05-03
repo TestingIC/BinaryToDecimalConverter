@@ -7,7 +7,7 @@
 int main () {
 	bool input_is_binary = false;
 
-	const int maximum_input_length = 4;
+	const int maximum_input_length = 10;
 	char input[maximum_input_length];
 
 	while (input_is_binary == false) {
