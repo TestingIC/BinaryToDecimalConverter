@@ -7,7 +7,7 @@
 int main () {
 	system("clear");
 
-	const int maximum_input_length = 20;
+	const int maximum_input_length = 50;
 
 	printf("Hello! This program converts any binary into base 10. To exit the program, type exit when it is asking for binary.\n");
 
