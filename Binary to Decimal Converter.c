@@ -1,53 +1,80 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <math.h>
 
 int main () {
-	bool input_is_binary = false;
+	system("clear");
 
-	const int maximum_input_length = 10;
-	char input[maximum_input_length];
+	const int maximum_input_length = 20;
 
-	while (input_is_binary == false) {
-		printf("Quick note: Please don't enter more than %d digit(s) as I can't figure out how to avoid a buffer overflow error.\n", maximum_input_length - 2);
-		printf("Decimal to convert to binary: ");
+	printf("Hello! This program converts any binary into base 10. To exit the program, type exit when it is asking for binary.\n");
 
-		fgets(input, maximum_input_length, stdin);	
+	while (true) {
+		printf("Binary to convert: ");
 
-		if ((int)input[maximum_input_length-2] != 10 && (int)input[maximum_input_length-2] != 0) {
-			printf("%d", (int)input[maximum_input_length-2]);
-			printf("More than %d digit(s) were entered! Exiting\n", maximum_input_length - 2);
+		char input[maximum_input_length] = {'\0'};
+		fgets(input, maximum_input_length, stdin);
+
+		//Checks to see if '\n' is in the input. Used to make sure user doesn't step over maximum_input_length
+		char *contains_newline = strstr(input, "\n");	
+
+		//Exit if the maximum_input_length is exceeded
+		if (contains_newline == NULL) {
+			printf("The maximum number of characters has been exceeded, aborting.\n");
 			exit(0);
 		}
 
+		//Exit if the user types in exit
+		if (strstr(input, "exit") != NULL) {
+			printf("Exiting!\n");
+			exit(0);
+		}
+
+		int reformated_input_length = 0;
+
 		for (int location_in_input = 0; location_in_input < maximum_input_length; location_in_input++) {
-			int character_as_integer = input[location_in_input];
-			if (character_as_integer > 47 && character_as_integer < 50) {
-				input_is_binary = true;
-			}
-			else if ((character_as_integer >= 2 && character_as_integer <= 9) || (character_as_integer >= 11 && character_as_integer <= 47) || (character_as_integer >= 50)) {
-				printf("Please only put 1s and 0s!\n");
-				input_is_binary = false;
+			char character = input[location_in_input];
+
+			if (character == '0' || character == '1') {
+				reformated_input_length += 1;
 			}
 		}
-	}
 
-	input[strlen(input) - 1] = '\0';
-	
-	int result = 0;
-	int power = maximum_input_length - 3;
-	
-	for (int location_in_input = 0; location_in_input <= maximum_input_length - 2; location_in_input++) {
-		int character_as_integer = input[location_in_input];
-		if (character_as_integer == 49) {
-			result += pow(2, power);
+		//Exit if there are no 1s or 0s
+		if (reformated_input_length == 0) {
+			printf("There are no 0s or 1s! Please try again.\n");
 		}
-		power--;
-	}
+		else {
+			//Add 1 space for the '\n'
+			char reformated_input[reformated_input_length];
 
-	printf("In binary, %s is: %d\n", input, result);
+			//Create the reformated string
+			int indepent_incrementer = 0;
+			for (int location_in_input = 0; location_in_input < maximum_input_length; location_in_input++) {
+				char character = input[location_in_input];
+
+				if (character == '0' || character == '1') {
+					reformated_input[indepent_incrementer] = character;
+					indepent_incrementer += 1;
+				}
+			}
+
+			reformated_input[reformated_input_length] = '\0';
+
+			int result = 0;
+			indepent_incrementer = 0;
+			for (int power = reformated_input_length - 1; power >= 0; power--) {
+				if (reformated_input[indepent_incrementer] == '1') {
+					result += pow(2, power);
+				}
+				indepent_incrementer += 1;
+			}
+
+			printf("%s in base 10 is %d.\n", reformated_input, result);
+		}
+	}
 
 	return 0;
 }
